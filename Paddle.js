@@ -9,6 +9,7 @@ class Paddle {
     this.brain = new Brain(3, 8, 3);
     this.speed = 4;
     this.isGameOver = false;
+    this.score = 0;
     this.fitness = 0;
   }
 

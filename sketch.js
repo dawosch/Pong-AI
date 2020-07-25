@@ -2,10 +2,12 @@ let ball;
 let leftPaddles;
 let rightPaddles;
 
-const POPULATION = 1;
+const GA = new GeneticAlgorithm();
+const POPULATION = 100;
 
 function init() {
   ball = new Ball();
+
   leftPaddles = [];
   rightPaddles = [];
 
@@ -16,15 +18,31 @@ function init() {
 }
 
 function gameover() {
-  calculateFitness();
-  // crossover();
-  init();
+  const newLeftPaddles = [];
+  const newRightPaddles = [];
+
+  GA.calculateFitness();
+
+  for (let i = 0; i < POPULATION; i++) {
+    newLeftPaddles.push(GA.selectOne(true));
+    newRightPaddles.push(GA.selectOne());
+  }
+
+  for (let i = 0; i < POPULATION; i++) {
+    leftPaddles[i].brain.clear();
+    rightPaddles[i].brain.clear();
+  }
+
+  ball = new Ball();
+  leftPaddles = newLeftPaddles;
+  rightPaddles = newRightPaddles;
+
   loop();
 }
 
 function setup() {
   createCanvas(600, 400);
-
+  tf.setBackend('cpu');
   init();
 }
 
@@ -43,7 +61,7 @@ function draw() {
       if (leftPaddle.pos.x === ball.pos.x) {
         const isHit = leftPaddle.hit(ball);
         if (isHit) {
-          leftPaddle.fitness += 1;
+          leftPaddle.score += 1;
           if (ball.dir.x === -1) ball.changeDir();
         } else {
           leftPaddle.isGameOver = true;
@@ -60,7 +78,7 @@ function draw() {
       if (rightPaddle.pos.x === ball.pos.x) {
         const isHit = rightPaddle.hit(ball);
         if (isHit) {
-          rightPaddle.fitness += 1;
+          rightPaddle.score += 1;
           if (ball.dir.x === 1) ball.changeDir();
         } else {
           rightPaddle.isGameOver = true;
