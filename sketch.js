@@ -1,6 +1,7 @@
 let ball;
 let leftPaddles;
 let rightPaddles;
+let generation;
 
 const GA = new GeneticAlgorithm();
 const POPULATION = 100;
@@ -37,18 +38,22 @@ function gameover() {
   leftPaddles = newLeftPaddles;
   rightPaddles = newRightPaddles;
 
+  generation++;
+
   loop();
 }
 
 function setup() {
   createCanvas(600, 400);
   tf.setBackend('cpu');
+
+  generation = 1;
+
   init();
 }
 
 function draw() {
   background(0);
-
   // const ballDir = {x: random()
   let activePlayersLeft = POPULATION;
   let activePlayersRight = POPULATION;
